@@ -66,9 +66,15 @@ class PlotBinaryPerceptron:
         self.X_MAX = max(xpoints)
         plt.figure(figsize=(10, 6))
         ypoints = [pt[1] for pt in points_to_plot]
-        classes = ['o:r' if pt[2] == -1 else 'P:b' for pt in points_to_plot]
-        for (x, y, c) in zip(xpoints, ypoints, classes):
-            plt.plot(x, y, c, linestyle='')
+        # Iterate through each point to plot it with the appropriate color and marker
+        for (x, y, c) in points_to_plot:
+            if c == -1:
+                plt.plot(x, y, 'or', linestyle='')  # Plot points with class -1 as red circle
+            else:
+                plt.plot(x, y, 'Pb', linestyle='')  # Plot points with class +1 as blue pluses
+        # classes = ['o:r' if pt[2] == -1 else 'P:b' for pt in points_to_plot]
+        # for (x, y, c) in zip(xpoints, ypoints, classes):
+        #     plt.plot(x, y, c, linestyle='')
     
     def plot_separator(self, w0, w1, w2):
         """
