@@ -9,7 +9,7 @@ called run_2_class_2_feature_iris_data.py.
 
 
 def student_name():
-    return "Prashant Rangarajan"  # Replace with your own name here
+    return "Ashley Fenton and Alex Pullen"  # Replaced with my own name
 
 
 class BinaryPerceptron:
@@ -34,7 +34,7 @@ class BinaryPerceptron:
     
     def classify(self, x_vector):
         """
-        Method that classifies a given data point into one of 2 classes
+        Method that classifies a given data point into one of 2 classes.
         ---
         Inputs:
         x_vector = [x_0, x_1, ..., x_{n-1}]
@@ -45,8 +45,12 @@ class BinaryPerceptron:
               +1 if the current weights classify x_vector as positive i.e. the required dot product must be >=0,
         else  -1 if it is classified as negative.
         """
-        # ADD YOUR CODE HERE
-        raise NotImplementedError
+        #Computing the dot product of the weights and the input vector called 'x_vector'
+        dot_product = sum(w*x for w, x in zip(self.weights[:-1], x_vector)) + self.weights[-1]
+        #If the dot product is greater than or equal to 0, it will return a +1 (indicating a positive classification)
+        #Otherwise, it will return a -1 (indicating a negative classification)
+        y_hat = +1 if dot_product >= 0 else -1
+        return y_hat
     
     def train_with_one_example(self, x_vector, y):
         """
@@ -62,8 +66,25 @@ class BinaryPerceptron:
         weight_changed: True if there was a change in the weights
                         else False
         """
-        # ADD YOUR CODE HERE
-        raise NotImplementedError
+        #Predicting the class of x_vector using the current weights
+        y_hat = self.classify(x_vector)
+        #Initialzing a flag to keep track of whether the weights are changed throughout the method
+        weight_changed = False
+        #Updating the weights according to the perception learning rules 
+        #if the predicted class (y_hat) does not match the actual class (y)
+        if y != y_hat:
+            #Iterating over each fature in x_vector (excluding the bias term) to update its weight
+            for i in range(len(self.weights) - 1):
+                #Updating the weight for each feature according to the perceptron learning rule:
+                #weight_new=weight_old+learning_rate*(desired_output-predicted_output)*feature_value
+                #self.alpha is the learning rate
+                #(y * x_vector[i]) is the product of the actual class and the feature value
+                self.weights[i] += self.alpha * (y * x_vector[i])
+            #Updating the bias weight
+            self.weights[-1] += self.alpha * y 
+            #Now the weights have been updated, change the flag to true 
+            weight_changed = True
+        return weight_changed
     
     def train_for_an_epoch(self, training_data):
         """
@@ -79,8 +100,19 @@ class BinaryPerceptron:
         changed_count: Return the number of weight updates.
         (If zero, then training has converged.)
         """
-        # ADD YOUR CODE HERE
-        raise NotImplementedError
+        #Keeping track of the number of times the weights are updated
+        changed_count = 0
+        #Looping through each example in the training data
+        for example in training_data:
+            #Extracting the feature vector from the current example
+            x_vector = example[:-1]  
+            #Extracting the label (y) for the current example
+            y = example[-1]
+            #Incrementing the changed_count by 1 if the weights were updated
+            if self.train_with_one_example(x_vector, y):
+                changed_count += 1
+        #Returning the number of times the model adjusted its weights during this epoch
+        return changed_count
 
 
 def sample_test():
